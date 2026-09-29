@@ -10,43 +10,11 @@ The game features two paddles controlled via DIP switches on the Arty A35 board,
 
 ## Architecture
 
-### System Block Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    MicroBlaze SoC System                        │
-│                                                                 │
-│  ┌──────────┐   LMB    ┌──────────────┐   LMB    ┌──────────┐  │
-│  │          │──────────▶│   LMB BRAM   │──────────│          │  │
-│  │          │            │ (Dual Port)  │          │          │  │
-│  │          │◀───────────└──────────────┘◀─────────│          │  │
-│  │          │                                            │  │
-│  │          │   LMB    ┌──────────────┐   LMB    │          │  │
-│  │          │──────────▶│   LMB BRAM   │──────────│          │  │
-│  │          │            │ (BRAM Ctrl)  │          │          │  │
-│  │          │◀───────────└──────────────┘◀─────────│          │  │
-│  │          │                                            │  │
-│  │ Micro   │   AXI    ┌──────────────┐   AXI    │          │  │
-│  │  Blaze  │─────────▶│  AXI Inter-  │──────────│          │  │
-│  │ CPU     │◀─────────│   Connect    │◀─────────│          │  │
-│  │          │   AXI    │  (xbar)      │   AXI    │          │  │
-│  │          │          └──────────────┘          │          │  │
-│  └──────────┘           │ │ │ │                  └──────────┘  │
-│                         │ │ │ │                                 │
-│              ┌──────────┘ │ │ └──────────┐                      │
-│              │            │ │            │                      │
-│     ┌────────▼──┐  ┌──────▼────┐ ┌──────▼──────┐       ┌───────▼──────┐
-│     │  MDM 1    │  │AXI UART   │ │hw3_gpio_0   │ │ImageGen_1  │VGAController_0│
-│     │(Debug)    │  │lite_0     │ │(GPIO)       │ │(Image Gen)│(VGA Timing)  │
-│     └───────────┘  └───────────┘ └─────────────┘ └───────────┘ └──────────────┘
-│                                                                 │
-│  ┌────────────────────────────────────────────────────────────────┐
-│  │  CLK Wizard (100 MHz input) → Reset Controller                │
-│  └────────────────────────────────────────────────────────────────┘
-└─────────────────────────────────────────────────────────────────┘
-```
+The system is a **MicroBlaze soft processor** on an Artix-7 FPGA, with custom hardware IP cores connected via an **AXI bus**.
 
 ### Core Components
+
+#### 1. MicroBlaze Processor
 
 #### 1. MicroBlaze Processor
 
@@ -260,24 +228,7 @@ The ball moves diagonally across the screen with horizontal and vertical velocit
 
 ### Image Generation Pipeline
 
-```
-Pixel clock (25 MHz)
-    ↓
-┌──────────────┐     hPosCurrent   ┌──────────────────┐
-│  VGA         │◀─────────────────│   ImageGen       │
-│  Controller  │     vPosCurrent  │   (Pong Game)    │
-│              │                   │                  │
-│ Generates    │◀───── paddle1    │ Reads switches   │
-│ hSync/vSync  │       cursor     │ paddle2 cursor   │
-│              │◀───── score_1    │ score_1, score_2 │
-│              │◀───── score_2    │ ballCursorX,     │
-│              │◀───── ball       │   ballCursorY    │
-│              │─────────────────▶│──────────────────│
-│              │    r[3:0],       │ Outputs RGB      │
-│              │    g[3:0],       │ pixel data       │
-│              │    b[3:0]        │ for current pixel│
-└──────────────┘                  └──────────────────┘
-```
+The image generator runs in hardware at the VGA pixel clock (25 MHz), reading paddle positions from switches, ball cursor positions, and score registers, then outputting RGB pixel data for each scanline position.
 
 ## VHDL Conventions
 
