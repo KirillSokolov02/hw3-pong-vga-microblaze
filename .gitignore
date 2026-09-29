@@ -1,0 +1,72 @@
+# Vivado build/intermediate files
+*.cache
+*.hw
+*.ip_user_files
+*.runs
+*.srcs
+*.sim
+*.jou
+*.log
+*.mpf
+*.sdk
+*.xbo
+*.xci
+*.xpr
+*.xpr.bak
+*.gen
+*.backup
+*.bak
+*.str
+*.data
+*.hwdef
+*.mark
+*.nnx
+*.PA
+*.PR
+*.R
+*.ssd
+*.sty
+*.x
+*.xcix
+
+# Generated directories
+*.gen/
+*.cache/
+*.hw/
+*.runs/
+*.sim/
+*.sdk/
+
+# Simulation
+xsim.dir/
+xsim.*.dir/
+*.wcfg
+*.wdb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+# Temporary files
+*.tmp/
+*.tmp
+
+# IP repo auto-generated
+xgui/
+bd/
+drivers/*/data/
+example_designs/
+Makefile
